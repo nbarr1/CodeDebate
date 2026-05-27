@@ -13,16 +13,30 @@ export function parseGitHubUrl(url) {
   throw new Error('Unrecognised GitHub URL — paste a file or pull request URL')
 }
 
+async function checkResponse(res) {
+  if (res.ok) return
+  let msg = `GitHub ${res.status}`
+  try {
+    const body = await res.json()
+    if (body.message) msg += `: ${body.message}`
+  } catch {
+    if (res.statusText) msg += `: ${res.statusText}`
+  }
+  throw new Error(msg)
+}
+
 export async function fetchGitHubContent(url, token = '') {
   const parsed = parseGitHubUrl(url)
   const headers = {}
-  if (token) headers['Authorization'] = `Bearer ${token}`
+  if (token) headers['Authorization'] = `token ${token}`
 
   if (parsed.type === 'file') {
     const { owner, repo, branch, path } = parsed
-    const endpoint = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`
-    const res = await fetch(endpoint, { headers })
-    if (!res.ok) throw new Error(`GitHub ${res.status}: ${res.statusText}`)
+    const endpoint = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
+    const res = await fetch(endpoint, {
+      headers: { ...headers, Accept: 'application/vnd.github.v3.raw' },
+    })
+    await checkResponse(res)
     const content = await res.text()
     const filename = path.split('/').pop()
     return { content, filename, type: 'file' }
@@ -34,7 +48,7 @@ export async function fetchGitHubContent(url, token = '') {
   const res = await fetch(endpoint, {
     headers: { ...headers, Accept: 'application/vnd.github.v3.diff' },
   })
-  if (!res.ok) throw new Error(`GitHub ${res.status}: ${res.statusText}`)
+  await checkResponse(res)
   const content = await res.text()
   return { content, filename: `PR #${number}.diff`, type: 'diff' }
 }
