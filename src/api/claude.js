@@ -2,7 +2,7 @@ const ENDPOINT = 'https://api.anthropic.com/v1/messages'
 const MODEL = 'claude-sonnet-4-20250514'
 
 export async function callClaude(systemPrompt, userContent, apiKey) {
-  if (!apiKey?.trim()) throw new Error('Claude API key is required')
+  if (typeof apiKey !== 'string' || !apiKey.trim()) throw new Error('Claude API key is required')
 
   const response = await fetch(ENDPOINT, {
     method: 'POST',
