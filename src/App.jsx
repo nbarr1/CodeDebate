@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import KeysPanel from './components/KeysPanel/KeysPanel.jsx'
+import GitHubPanel from './components/GitHubPanel/GitHubPanel.jsx'
 import CodeInput from './components/CodeInput/CodeInput.jsx'
 import DebateRound from './components/DebateRound/DebateRound.jsx'
 import Synthesis from './components/Synthesis/Synthesis.jsx'
@@ -172,6 +173,10 @@ export default function App() {
 
         <div className={styles.content}>
           <KeysPanel keys={keys} onChange={setKeys} />
+          <GitHubPanel
+            githubToken={keys.github}
+            onLoad={(content) => setInput((i) => ({ ...i, code: content }))}
+          />
           <CodeInput
             code={input.code}
             problem={input.problem}

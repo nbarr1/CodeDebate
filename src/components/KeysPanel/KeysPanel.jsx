@@ -7,10 +7,11 @@ const KEY_LINKS = {
   claude: 'https://console.anthropic.com/settings/keys',
   openai: 'https://platform.openai.com/api-keys',
   gemini: 'https://aistudio.google.com/app/apikey',
+  github: 'https://github.com/settings/tokens',
 }
 
 export default function KeysPanel({ keys, onChange }) {
-  const [visible, setVisible] = useState({ claude: false, openai: false, gemini: false })
+  const [visible, setVisible] = useState({ claude: false, openai: false, gemini: false, github: false })
   const [open, setOpen] = useState(!keys.claude && !keys.openai && !keys.gemini)
   const [saveMsg, setSaveMsg] = useState('')
 
@@ -24,7 +25,7 @@ export default function KeysPanel({ keys, onChange }) {
 
   function handleClear() {
     clearKeys()
-    onChange({ claude: '', openai: '', gemini: '' })
+    onChange({ claude: '', openai: '', gemini: '', github: '' })
     setSaveMsg('cleared')
     setOpen(true)
     setTimeout(() => setSaveMsg(''), 2500)
@@ -102,6 +103,38 @@ export default function KeysPanel({ keys, onChange }) {
               </a>
             </div>
           ))}
+
+          {/* GitHub token — optional */}
+          <div className={styles.row}>
+            <span className="badge blue">
+              GitHub <span style={{ fontWeight: 400, opacity: 0.7, fontSize: '10px' }}>optional</span>
+            </span>
+            <div className={styles.inputWrap}>
+              <input
+                type={visible.github ? 'text' : 'password'}
+                placeholder="ghp_..."
+                value={keys.github || ''}
+                onChange={(e) => onChange({ ...keys, github: e.target.value })}
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <button
+                className={styles.eyeBtn}
+                onClick={() => setVisible((v) => ({ ...v, github: !v.github }))}
+                title={visible.github ? 'Hide token' : 'Show token'}
+              >
+                {visible.github ? '🙈' : '👁'}
+              </button>
+            </div>
+            <a
+              href={KEY_LINKS.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.keyLink}
+            >
+              Get token ↗
+            </a>
+          </div>
 
           {/* Actions */}
           <div className={styles.actions}>
