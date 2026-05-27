@@ -3,17 +3,10 @@ import { callOpenAI } from './openai.js'
 import { callGemini } from './gemini.js'
 import { SYNTHESIS_SYSTEM } from '../utils/agents.js'
 
-/**
- * Dispatches a call to the correct model based on agent.id.
- * @param {object} agent  — agent config from AGENTS
- * @param {string} system — system prompt
- * @param {string} user   — user message
- * @param {object} keys   — { openai, gemini }
- */
 export async function callAgent(agent, system, user, keys) {
   switch (agent.id) {
     case 'claude':
-      return callClaude(system, user)
+      return callClaude(system, user, keys.claude)
     case 'openai':
       return callOpenAI(system, user, keys.openai)
     case 'gemini':
@@ -23,11 +16,8 @@ export async function callAgent(agent, system, user, keys) {
   }
 }
 
-/**
- * Calls Claude as a neutral synthesis moderator.
- */
-export async function callSynthesis(userContent) {
-  return callClaude(SYNTHESIS_SYSTEM, userContent)
+export async function callSynthesis(userContent, claudeKey) {
+  return callClaude(SYNTHESIS_SYSTEM, userContent, claudeKey)
 }
 
 /**

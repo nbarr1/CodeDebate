@@ -1,15 +1,17 @@
 const ENDPOINT = 'https://api.anthropic.com/v1/messages'
 const MODEL = 'claude-sonnet-4-20250514'
 
-/**
- * Calls the Anthropic Claude API.
- * API key is injected by the Anthropic proxy when running inside claude.ai artifacts.
- * In standalone mode the browser handles auth via the proxy — no key needed in code.
- */
-export async function callClaude(systemPrompt, userContent) {
+export async function callClaude(systemPrompt, userContent, apiKey) {
+  if (!apiKey?.trim()) throw new Error('Claude API key is required')
+
   const response = await fetch(ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 1000,

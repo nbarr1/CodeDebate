@@ -4,16 +4,17 @@ import { AGENTS } from '../../utils/agents.js'
 import styles from './KeysPanel.module.css'
 
 const KEY_LINKS = {
+  claude: 'https://console.anthropic.com/settings/keys',
   openai: 'https://platform.openai.com/api-keys',
   gemini: 'https://aistudio.google.com/app/apikey',
 }
 
 export default function KeysPanel({ keys, onChange }) {
-  const [visible, setVisible] = useState({ openai: false, gemini: false })
-  const [open, setOpen] = useState(!keys.openai && !keys.gemini)
+  const [visible, setVisible] = useState({ claude: false, openai: false, gemini: false })
+  const [open, setOpen] = useState(!keys.claude && !keys.openai && !keys.gemini)
   const [saveMsg, setSaveMsg] = useState('')
 
-  const allSet = keys.openai?.trim() && keys.gemini?.trim()
+  const allSet = keys.claude?.trim() && keys.openai?.trim() && keys.gemini?.trim()
 
   function handleSave() {
     const ok = saveKeys(keys)
@@ -23,7 +24,7 @@ export default function KeysPanel({ keys, onChange }) {
 
   function handleClear() {
     clearKeys()
-    onChange({ openai: '', gemini: '' })
+    onChange({ claude: '', openai: '', gemini: '' })
     setSaveMsg('cleared')
     setOpen(true)
     setTimeout(() => setSaveMsg(''), 2500)
@@ -68,22 +69,16 @@ export default function KeysPanel({ keys, onChange }) {
       {/* Body */}
       {open && (
         <div className={styles.body}>
-          {/* Claude — no key */}
-          <div className={styles.row}>
-            <span className="badge amber">{AGENTS[0].name}</span>
-            <div className={styles.noKey}>
-              ✓ Authenticated via Anthropic — no key needed
-            </div>
-          </div>
-
-          {/* OpenAI + Gemini */}
           {AGENTS.filter((a) => a.requiresKey).map((agent) => (
             <div key={agent.id} className={styles.row}>
               <span className={`badge ${agent.colorClass}`}>{agent.name}</span>
               <div className={styles.inputWrap}>
                 <input
                   type={visible[agent.keyName] ? 'text' : 'password'}
-                  placeholder={agent.id === 'openai' ? 'sk-...' : 'AIza...'}
+                  placeholder={
+                    agent.id === 'claude' ? 'sk-ant-...' :
+                    agent.id === 'openai' ? 'sk-...' : 'AIza...'
+                  }
                   value={keys[agent.keyName] || ''}
                   onChange={(e) => onChange({ ...keys, [agent.keyName]: e.target.value })}
                   autoComplete="off"

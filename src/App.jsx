@@ -35,6 +35,7 @@ export default function App() {
   const canStart =
     input.code.trim() &&
     input.problem.trim() &&
+    keys.claude?.trim() &&
     keys.openai?.trim() &&
     keys.gemini?.trim() &&
     !debate.isRunning
@@ -93,7 +94,7 @@ export default function App() {
         }))
 
         const synthMsg = buildSynthesisPrompt(input.code, input.problem, allRounds)
-        const synthesis = await callSynthesis(synthMsg)
+        const synthesis = await callSynthesis(synthMsg, keys.claude)
 
         setDebate((prev) => ({
           ...prev,
