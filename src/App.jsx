@@ -64,6 +64,7 @@ export default function App() {
           }))
 
           const response = await callAgent(agent, agent.persona, userMsg, keys)
+          if (abortRef.current) return
           roundResps.push({ ...agent, response })
 
           setDebate((prev) => ({
@@ -96,6 +97,7 @@ export default function App() {
 
         const synthMsg = buildSynthesisPrompt(input.code, input.problem, allRounds)
         const synthesis = await callSynthesis(synthMsg, keys.claude)
+        if (abortRef.current) return
 
         setDebate((prev) => ({
           ...prev,
@@ -106,6 +108,7 @@ export default function App() {
         }))
       }
     } catch (err) {
+      if (abortRef.current) return
       setDebate((prev) => ({
         ...prev,
         isRunning: false,
@@ -152,6 +155,7 @@ export default function App() {
           }))
 
           const response = await callAgent(agent, agent.persona, userMsg, keys)
+          if (abortRef.current) return
           roundResps.push({ ...agent, response })
 
           setDebate((prev) => ({
@@ -180,6 +184,7 @@ export default function App() {
 
         const synthMsg = buildSynthesisPrompt(input.code, input.problem, allRounds)
         const synthesis = await callSynthesis(synthMsg, keys.claude)
+        if (abortRef.current) return
 
         setDebate((prev) => ({
           ...prev,
@@ -190,6 +195,7 @@ export default function App() {
         }))
       }
     } catch (err) {
+      if (abortRef.current) return
       setDebate((prev) => ({
         ...prev,
         isRunning: false,
