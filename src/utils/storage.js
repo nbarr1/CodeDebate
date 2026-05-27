@@ -3,11 +3,11 @@ const STORAGE_KEY = 'macr_api_keys_v1'
 export function loadKeys() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { claude: '', openai: '', gemini: '' }
+    if (!raw) return { claude: '', openai: '', gemini: '', github: '' }
     const parsed = JSON.parse(raw)
-    return { claude: '', openai: '', gemini: '', ...parsed }
+    return { claude: '', openai: '', gemini: '', github: '', ...parsed }
   } catch {
-    return { claude: '', openai: '', gemini: '' }
+    return { claude: '', openai: '', gemini: '', github: '' }
   }
 }
 
