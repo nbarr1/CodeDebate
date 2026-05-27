@@ -1,12 +1,13 @@
-const FILE_RE = /github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/
-const PR_RE = /github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/
+const FILE_RE = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/i
+const PR_RE = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)\/pull\/(\d+)\/??$/i
 
 export function parseGitHubUrl(url) {
+  const cleanUrl = url.trim().split('?')[0].split('#')[0]
   let m
-  if ((m = FILE_RE.exec(url))) {
+  if ((m = FILE_RE.exec(cleanUrl))) {
     return { type: 'file', owner: m[1], repo: m[2], branch: m[3], path: m[4] }
   }
-  if ((m = PR_RE.exec(url))) {
+  if ((m = PR_RE.exec(cleanUrl))) {
     return { type: 'pr', owner: m[1], repo: m[2], number: m[3] }
   }
   throw new Error('Unrecognised GitHub URL — paste a file or pull request URL')
