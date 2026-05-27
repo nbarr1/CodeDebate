@@ -5,7 +5,8 @@ export const AGENTS = [
     company: 'Anthropic',
     model: 'claude-sonnet-4-20250514',
     colorClass: 'amber',
-    requiresKey: false,
+    requiresKey: true,
+    keyName: 'claude',
     persona: `You are Claude (Anthropic) in a live multi-agent code review debate with GPT-4o (OpenAI) and Gemini (Google).
 Your mandate: correctness, safety, edge cases, readability, idiomatic patterns for the language in use.
 Round 1: give your independent analysis. Round 2+: engage the other agents by name — agree with specifics, push back with technical arguments, or update your position.
