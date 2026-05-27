@@ -8,7 +8,7 @@ export default function GitHubPanel({ githubToken, onLoad }) {
   const [status, setStatus] = useState({ msg: '', kind: '' })
 
   async function handleLoad() {
-    if (!url.trim()) return
+    if (status.kind === 'loading' || !url.trim()) return
     setStatus({ msg: 'Loading…', kind: 'loading' })
     try {
       const { content, filename, type } = await fetchGitHubContent(url, githubToken)
