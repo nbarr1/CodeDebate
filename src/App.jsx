@@ -64,6 +64,7 @@ export default function App() {
           }))
 
           const response = await callAgent(agent, agent.persona, userMsg, keys)
+          if (abortRef.current) return
           roundResps.push({ ...agent, response })
 
           setDebate((prev) => ({
@@ -96,6 +97,7 @@ export default function App() {
 
         const synthMsg = buildSynthesisPrompt(input.code, input.problem, allRounds)
         const synthesis = await callSynthesis(synthMsg, keys.claude)
+        if (abortRef.current) return
 
         setDebate((prev) => ({
           ...prev,
@@ -106,6 +108,7 @@ export default function App() {
         }))
       }
     } catch (err) {
+      if (abortRef.current) return
       setDebate((prev) => ({
         ...prev,
         isRunning: false,
@@ -118,6 +121,88 @@ export default function App() {
   function reset() {
     abortRef.current = true
     setDebate(INITIAL_STATE)
+  }
+
+  async function extendDebate() {
+    if (debate.isRunning || debate.phase !== 'done') return
+    abortRef.current = false
+
+    const allRounds = [...debate.rounds]
+    const startRound = allRounds.length + 1
+    const endRound = allRounds.length + MAX_ROUNDS
+
+    setDebate((prev) => ({
+      ...prev,
+      isRunning: true,
+      phase: 'debating',
+      synthesis: null,
+      status: `Continuing debate — Round ${startRound}...`,
+    }))
+
+    try {
+      for (let rn = startRound; rn <= endRound; rn++) {
+        if (abortRef.current) break
+
+        const roundResps = []
+        const userMsg = buildRoundPrompt(rn, input.code, input.problem, allRounds)
+
+        for (const agent of AGENTS) {
+          if (abortRef.current) break
+
+          setDebate((prev) => ({
+            ...prev,
+            status: `Round ${rn}/${endRound} — ${agent.name} (${agent.model}) thinking...`,
+          }))
+
+          const response = await callAgent(agent, agent.persona, userMsg, keys)
+          if (abortRef.current) return
+          roundResps.push({ ...agent, response })
+
+          setDebate((prev) => ({
+            ...prev,
+            rounds: [...allRounds, [...roundResps]],
+          }))
+        }
+
+        allRounds.push(roundResps)
+
+        const highCount = roundResps.filter(
+          (r) => extractConsensus(r.response) === 'HIGH'
+        ).length
+        if (highCount >= 2) {
+          setDebate((prev) => ({ ...prev, status: 'High consensus reached — synthesizing...' }))
+          break
+        }
+      }
+
+      if (!abortRef.current) {
+        setDebate((prev) => ({
+          ...prev,
+          phase: 'synthesizing',
+          status: 'Engineering lead synthesizing final verdict...',
+        }))
+
+        const synthMsg = buildSynthesisPrompt(input.code, input.problem, allRounds)
+        const synthesis = await callSynthesis(synthMsg, keys.claude)
+        if (abortRef.current) return
+
+        setDebate((prev) => ({
+          ...prev,
+          synthesis,
+          phase: 'done',
+          isRunning: false,
+          status: 'Debate complete',
+        }))
+      }
+    } catch (err) {
+      if (abortRef.current) return
+      setDebate((prev) => ({
+        ...prev,
+        isRunning: false,
+        phase: 'done',
+        status: `Error: ${err.message}`,
+      }))
+    }
   }
 
   const isError = debate.status.startsWith('Error')
@@ -142,7 +227,7 @@ export default function App() {
 
         <div className={styles.sidebarFooter}>
           <p className={styles.sidebarHint}>
-            Each model sees all prior round responses. Debate ends at {MAX_ROUNDS} rounds or when ≥2 agents signal HIGH consensus.
+            Each model sees all prior round responses. Debate ends at {MAX_ROUNDS} rounds or when ≥2 agents signal HIGH consensus. You can extend by {MAX_ROUNDS} more rounds after synthesis.
           </p>
         </div>
       </aside>
@@ -203,6 +288,17 @@ export default function App() {
 
           {debate.synthesis && (
             <Synthesis content={debate.synthesis} onReset={reset} />
+          )}
+
+          {debate.phase === 'done' && debate.rounds.length < MAX_ROUNDS * 2 && (
+            <div className={styles.extendRow}>
+              <button onClick={extendDebate}>
+                ↻ Run {MAX_ROUNDS} more rounds
+              </button>
+              <span className={styles.extendHint}>
+                Agents will see all prior responses and debate further
+              </span>
+            </div>
           )}
 
           <div ref={bottomRef} />

@@ -110,6 +110,18 @@
   width: 100%;
 }
 
+.extendRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.extendHint {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .layout { grid-template-columns: 1fr; }
