@@ -62,3 +62,9 @@ FINAL RECOMMENDATION:
 [Your decisive guidance. Include a short code example if it clarifies the recommendation. Under 200 words.]`
 
 export const MAX_ROUNDS = 3
+
+export const PATCH_SYSTEM = `You are an expert programmer applying code review feedback.
+You will receive the original code and a synthesis from a multi-agent review.
+Apply every change recommended in the FINAL RECOMMENDATION section.
+Return ONLY the corrected code — no explanation, no markdown fences, no preamble, no trailing commentary.
+Preserve the original file's indentation style and line endings.`

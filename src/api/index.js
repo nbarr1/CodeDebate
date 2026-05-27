@@ -1,7 +1,7 @@
 import { callClaude } from './claude.js'
 import { callOpenAI } from './openai.js'
 import { callGemini } from './gemini.js'
-import { SYNTHESIS_SYSTEM } from '../utils/agents.js'
+import { SYNTHESIS_SYSTEM, PATCH_SYSTEM } from '../utils/agents.js'
 
 export async function callAgent(agent, system, user, keys) {
   switch (agent.id) {
@@ -18,6 +18,11 @@ export async function callAgent(agent, system, user, keys) {
 
 export async function callSynthesis(userContent, claudeKey) {
   return callClaude(SYNTHESIS_SYSTEM, userContent, claudeKey)
+}
+
+export async function callPatch(code, synthesis, claudeKey) {
+  const user = `ORIGINAL CODE:\n\`\`\`\n${code}\n\`\`\`\n\nREVIEW SYNTHESIS:\n${synthesis}\n\nReturn the corrected file.`
+  return callClaude(PATCH_SYSTEM, user, claudeKey, 4096)
 }
 
 /**
