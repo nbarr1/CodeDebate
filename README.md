@@ -58,7 +58,7 @@ src/
 │   ├── github.js        # GitHub URL parser + file/PR fetcher
 │   └── index.js         # Dispatcher, prompt builders, patch caller
 ├── components/
-│   ├── KeysPanel/       # API key management (all 4 keys + optional GitHub)
+│   ├── KeysPanel/       # API key management (all 3 model keys + optional GitHub)
 │   ├── GitHubPanel/     # Load file or PR diff from a GitHub URL
 │   ├── CodeInput/       # Code + problem input
 │   ├── DebateRound/     # Per-round 3-column agent response cards
