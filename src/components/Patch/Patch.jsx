@@ -35,7 +35,7 @@ export default function Patch({ code, synthesis, claudeKey }) {
     a.href = url
     a.download = 'patched.txt'
     a.click()
-    URL.revokeObjectURL(url)
+    setTimeout(() => URL.revokeObjectURL(url), 100)
   }
 
   return (
