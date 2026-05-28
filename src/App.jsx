@@ -4,6 +4,7 @@ import GitHubPanel from './components/GitHubPanel/GitHubPanel.jsx'
 import CodeInput from './components/CodeInput/CodeInput.jsx'
 import DebateRound from './components/DebateRound/DebateRound.jsx'
 import Synthesis from './components/Synthesis/Synthesis.jsx'
+import Patch from './components/Patch/Patch.jsx'
 import StatusBar from './components/StatusBar/StatusBar.jsx'
 import { callAgent, callSynthesis, buildRoundPrompt, buildSynthesisPrompt } from './api/index.js'
 import { AGENTS, MAX_ROUNDS } from './utils/agents.js'
@@ -288,6 +289,14 @@ export default function App() {
 
           {debate.synthesis && (
             <Synthesis content={debate.synthesis} onReset={reset} />
+          )}
+
+          {debate.synthesis && (
+            <Patch
+              code={input.code}
+              synthesis={debate.synthesis}
+              claudeKey={keys.claude}
+            />
           )}
 
           {debate.phase === 'done' && debate.rounds.length < MAX_ROUNDS * 2 && (

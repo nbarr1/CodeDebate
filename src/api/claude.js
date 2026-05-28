@@ -1,8 +1,8 @@
 const ENDPOINT = 'https://api.anthropic.com/v1/messages'
 const MODEL = 'claude-sonnet-4-20250514'
 
-export async function callClaude(systemPrompt, userContent, apiKey) {
-  if (typeof apiKey !== 'string' || !apiKey.trim()) throw new Error('Claude API key is required')
+export async function callClaude(systemPrompt, userContent, apiKey, maxTokens = 1000) {
+  if (!apiKey?.trim()) throw new Error('Claude API key is required')
 
   const response = await fetch(ENDPOINT, {
     method: 'POST',
@@ -14,7 +14,7 @@ export async function callClaude(systemPrompt, userContent, apiKey) {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 1000,
+      max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: 'user', content: userContent }],
     }),
