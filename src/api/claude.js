@@ -1,5 +1,5 @@
 const ENDPOINT = 'https://api.anthropic.com/v1/messages'
-const MODEL = 'claude-sonnet-4-20250514'
+const MODEL = 'claude-sonnet-4-6'
 
 export async function callClaude(systemPrompt, userContent, apiKey, maxTokens = 1000) {
   if (!apiKey?.trim()) throw new Error('Claude API key is required')

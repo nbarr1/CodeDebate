@@ -3,7 +3,7 @@ export const AGENTS = [
     id: 'claude',
     name: 'Claude',
     company: 'Anthropic',
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     colorClass: 'amber',
     requiresKey: true,
     keyName: 'claude',
