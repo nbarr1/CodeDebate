@@ -1,8 +1,8 @@
-const ENDPOINT = 'https://api.openai.com/v1/chat/completions'
-const MODEL = 'gpt-4o'
+const ENDPOINT = 'https://api.openai.com/v1/responses'
+const MODEL = 'gpt-5.3-codex'
 
 /**
- * Calls the OpenAI Chat Completions API.
+ * Calls the OpenAI Responses API.
  * @param {string} systemPrompt
  * @param {string} userContent
  * @param {string} apiKey  — user-supplied OpenAI key
@@ -18,11 +18,9 @@ export async function callOpenAI(systemPrompt, userContent, apiKey) {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 1000,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userContent },
-      ],
+      instructions: systemPrompt,
+      input: userContent,
+      max_output_tokens: 1000,
     }),
   })
 
@@ -32,5 +30,11 @@ export async function callOpenAI(systemPrompt, userContent, apiKey) {
   }
 
   const data = await response.json()
-  return data.choices?.[0]?.message?.content ?? 'No response.'
+  const outputText = data.output
+    ?.flatMap((item) => item.content ?? [])
+    ?.map((content) => content.text ?? '')
+    ?.filter(Boolean)
+    ?.join('\n')
+
+  return data.output_text ?? outputText ?? 'No response.'
 }
