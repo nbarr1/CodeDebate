@@ -75,8 +75,7 @@ Recommended components:
 ### Phase 5: Validation
 
 - Infer project validation commands from repository metadata where possible.
-- Allow the user to configure commands before execution.
-- Run validations server-side in an isolated environment.
+- Allow the user to configure commands before execution, subject to strict input sanitization.\n- Run validations server-side in a highly restricted, ephemeral sandbox (e.g., gVisor or unprivileged containers) with no access to internal networks or credentials.
 - Capture logs and include failures in the UI.
 - Block automatic PR creation by default if validation fails, unless the user explicitly overrides.
 
