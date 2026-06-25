@@ -55,7 +55,7 @@ Recommended components:
 
 - Replace the single `code` text area workflow with a repository review job view.
 - Ask the models for a structured change plan before generating patches.
-- Require model output in a schema such as:
+- Require model output in a schema (enforced via provider-native structured outputs or tool calling) such as:
   - summary
   - risks
   - files to change
