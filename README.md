@@ -1,6 +1,6 @@
 # Multi-Agent Code Review
 
-A web app that sends your code to **Claude**, **GPT-4o**, and **Gemini** simultaneously. Each model sees the others' responses across up to 3 debate rounds (extendable to 6), then a Claude "senior engineering lead" synthesizes a final verdict. A patch panel then lets Claude apply the recommendations and generate the corrected file directly.
+A web app that sends your code to **Claude**, **GPT-5.3 Codex**, and **Gemini** simultaneously. Each model sees the others' responses across up to 3 debate rounds (extendable to 6), then a Claude "senior engineering lead" synthesizes a final verdict. A patch panel then lets Claude apply the recommendations and generate the corrected file directly.
 
 ## Features
 
@@ -28,7 +28,7 @@ You'll need keys for all three models. Enter them in the **API Keys** panel on f
 | Model   | Provider  | Where to get one |
 |---------|-----------|-----------------|
 | Claude  | Anthropic | [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys) |
-| GPT-4o  | OpenAI    | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
+| GPT-5.3 Codex  | OpenAI    | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
 | Gemini  | Google    | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) |
 | GitHub  | GitHub    | [github.com/settings/tokens](https://github.com/settings/tokens) — optional, for private repos |
 
