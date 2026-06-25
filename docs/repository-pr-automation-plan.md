@@ -67,7 +67,7 @@ Recommended components:
 ### Phase 4: Multi-file patch generation and application
 
 - Generate unified diffs or structured file operations for multiple files.
-- Apply patches in a clean temporary checkout of the target branch.
+- Apply patches in a clean, isolated temporary checkout of the target branch (e.g., using unique temporary directories per job).
 - Reject patches that touch files outside the approved file set unless the user re-approves.
 - Detect conflicts, malformed patches, and attempts to modify binary files.
 - Show a reviewable diff in the UI.
