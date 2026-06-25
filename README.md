@@ -1,5 +1,7 @@
 # Multi-Agent Code Review
 
+**Stable release:** 1.0.0 (2026-06-25)
+
 A web app that sends your code to **Claude**, **GPT-5.3 Codex**, and **Gemini** simultaneously. Each model sees the others' responses across up to 3 debate rounds (extendable to 6), then a Claude "senior engineering lead" synthesizes a final verdict. A patch panel then lets Claude apply the recommendations and generate the corrected file directly.
 
 ## Features
@@ -9,7 +11,7 @@ A web app that sends your code to **Claude**, **GPT-5.3 Codex**, and **Gemini** 
 - Extend by 3 more rounds after synthesis (up to 6 total)
 - Final synthesis by Claude acting as engineering lead
 - **Agentic patch generation** — Claude applies the synthesis to produce a corrected file with copy/download
-- **GitHub integration** — load a file or PR diff directly from a URL
+- **GitHub integration** — load a single file or PR diff directly from a URL
 - API keys saved to `localStorage` — enter once per session
 
 ## Getting Started
@@ -38,7 +40,7 @@ Keys are stored in `localStorage` only — never committed to git, never sent an
 
 ## GitHub Integration
 
-Paste a GitHub URL into the **Load from GitHub** panel to populate the code field automatically:
+Paste a GitHub URL into the **Load from GitHub** panel to populate the code field automatically. This release supports loading one file or one PR diff; it does not crawl an entire repository or create pull requests:
 
 | URL format | Example |
 |---|---|
@@ -46,6 +48,15 @@ Paste a GitHub URL into the **Load from GitHub** panel to populate the code fiel
 | Pull request | `https://github.com/owner/repo/pull/42` |
 
 Public repos work without a token. Add a GitHub token for private repos or to avoid the 60 req/hr unauthenticated rate limit.
+
+### Current GitHub automation boundary
+
+The current stable release can read a single linked file or PR diff and can produce a corrected file in the browser for copy/download. It is **not currently capable** of reading an entire linked GitHub repository, making repository-wide edits, committing those edits, pushing a branch, or creating a GitHub pull request automatically.
+
+
+## Repository Automation Plan
+
+Repository-wide ingestion and automated pull request creation are planned future capabilities. See [Repository-Wide Review and Pull Request Automation Plan](docs/repository-pr-automation-plan.md) for the proposed phased implementation.
 
 ## Project Structure
 
